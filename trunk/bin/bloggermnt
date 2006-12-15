@@ -1,0 +1,9 @@
+#!/bin/bash
+
+BLOGGERFS=$HOME/workspace/bloggerfs
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
+#java -cp .:$BLOGGERFS/classes:$BLOGGERFS/fusej/lib/commons-logging-1.0.4.jar:$BLOGGERFS/fusej/dist/fuse-j.jar:$BLOGGERFS/gdata/java/lib/gdata-client-1.0.jar -Djava.library.path=$BLOGGERFS/fusej/jni -Dorg.apache.commons.logging.Log=fuse.logging.FuseLog -Dfuse.logging.level=DEBUG ca.ubc.ece.bloggerfs.BloggerFileSystem
+
+java -cp .:$BLOGGERFS/classes:$BLOGGERFS/fusej/lib/commons-logging-1.0.4.jar:$BLOGGERFS/fusej/dist/fuse-j.jar:$BLOGGERFS/gdata/java/lib/gdata-client-1.0.jar -Djava.library.path=$BLOGGERFS/fusej/jni -Dorg.apache.commons.logging.Log=fuse.logging.FuseLog -Dfuse.logging.level=DEBUG -DsocksProxyHost=proxy.lsd.ufcg.edu.br -DsocksProxyPort=3128 -Dhttp.proxyHost=proxy.lsd.ufcg.edu.br -Dhttp.proxyPort=3128 -Dhttps.proxyHost=proxy.lsd.ufcg.edu.br -Dhttps.proxyPort=3128 ca.ubc.ece.bloggerfs.BloggerFileSystem
