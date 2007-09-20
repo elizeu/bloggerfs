@@ -1,7 +1,11 @@
-package ca.ubc.ece.bloggerfs;
+package ca.ubc.ece.netsys.bloggerfs;
 
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -77,7 +81,7 @@ public class BloggerFileSystem implements Filesystem1 {
 		feedUrl = null;
 		try {
 			//feedUrl = new URL("http://mundau.blogspot.com/feeds/posts/default");
-			feedUrl = new URL(url);
+			feedUrl = new URL(url+"/feeds/posts/default");
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -142,12 +146,11 @@ public class BloggerFileSystem implements Filesystem1 {
 	public FuseStat getattr(String arg0) throws FuseException {
 
 		BloggerEntry b = fileMap.get(arg0);		
-		
-		
+				
 		FuseStat stat = new FuseStat();
 		
 		stat.mode = b.isDirectory() ? FuseFtype.TYPE_DIR | 0755 : FuseFtype.TYPE_FILE | 0644;
-		stat.nlink = 0;
+		stat.nlink = 1;
 		stat.uid = 1000;
 		stat.gid = 1000;
 		stat.size = b.getSize();
@@ -284,27 +287,37 @@ public class BloggerFileSystem implements Filesystem1 {
 	public static void main(String[] args){
 		
 		if (args.length < 3) {
-			System.out.println("Must specify a mounting point, a Blog URL, username & password.");
-			System.out.println("Usage: bloggermnt <mounting point> <url> <username> <password>");
+			System.out.println("[Error]: Must specify a mounting point, a Blog URL, username & password.");
+			System.out.println();			
+			System.out.println("[Usage]: bloggermnt <username> <url> <mounting point>");
 		    System.exit(-1);
 		}
 
+		BufferedReader in = new BufferedReader( new InputStreamReader(System.in));
+				
+		String password = "";
+		
+		try {
+			System.out.print("Password: ");
+			password = in.readLine();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			System.exit(-1);
+		}
+		
 		String[] fs_args = new String[3];
 		fs_args[0] = "-f";
 		fs_args[1] = "-s";
-		fs_args[2] = "/mnt/bloggerfs";
+		fs_args[2] = args[2];
 
 		/** A BloggerFS instance */
-		Filesystem1 bloggerfs = new BloggerFileSystem(args[1],args[2],args[3]);
+		Filesystem1 bloggerfs = new BloggerFileSystem(args[0],password,args[1]);
 
-		try
-		{
+		try {
 			FuseMount.mount(fs_args, bloggerfs);
-		      }
-		      catch (Exception e)
-		      {
-		         e.printStackTrace();
-		      }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 
