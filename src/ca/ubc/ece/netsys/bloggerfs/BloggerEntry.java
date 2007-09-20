@@ -1,4 +1,4 @@
-package ca.ubc.ece.bloggerfs;
+package ca.ubc.ece.netsys.bloggerfs;
 
 import com.google.gdata.data.Entry;
 import com.google.gdata.data.PlainTextConstruct;
