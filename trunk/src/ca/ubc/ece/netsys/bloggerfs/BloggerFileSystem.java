@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2007 Networked Systems Lab - http://www.ece.ubc.ca
+ * 
+ * Electrical and Computer Engineering Department - University of British Columbia
+ *  
+ * 
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 package ca.ubc.ece.netsys.bloggerfs;
 
 
@@ -286,32 +306,20 @@ public class BloggerFileSystem implements Filesystem1 {
 	 */
 	public static void main(String[] args){
 		
-		if (args.length < 3) {
-			System.out.println("[Error]: Must specify a mounting point, a Blog URL, username & password.");
+		if (args.length < 4) {
+			System.out.println("[Error]: Must specify a mounting point and a Blog URL");
 			System.out.println();			
-			System.out.println("[Usage]: bloggermnt <username> <url> <mounting point>");
+			System.out.println("[Usage]: bloggermnt <url> <mounting point>");
 		    System.exit(-1);
-		}
-
-		BufferedReader in = new BufferedReader( new InputStreamReader(System.in));
-				
-		String password = "";
-		
-		try {
-			System.out.print("Password: ");
-			password = in.readLine();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			System.exit(-1);
 		}
 		
 		String[] fs_args = new String[3];
 		fs_args[0] = "-f";
 		fs_args[1] = "-s";
-		fs_args[2] = args[2];
+		fs_args[2] = args[3];
 
 		/** A BloggerFS instance */
-		Filesystem1 bloggerfs = new BloggerFileSystem(args[0],password,args[1]);
+		Filesystem1 bloggerfs = new BloggerFileSystem(args[0],args[1],args[2]);
 
 		try {
 			FuseMount.mount(fs_args, bloggerfs);
