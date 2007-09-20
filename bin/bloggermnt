@@ -1,9 +1,43 @@
 #!/bin/bash
+#
+# Copyright (c) 2007 Networked Systems Lab - http://www.ece.ubc.ca
+# 
+# Electrical and Computer Engineering Department - University of British Comlumbia
+#  
+# 
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your option)
+# any later version.
+# 
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+# more details.
+# 
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA 02111-1307 USA
+#
+
+##GET Blogger Username
+read -s -p "username: "
+
+BLOGGER_USERNAME=$REPLY
+
+###GET Blogger password
+read -s -p "password: "
 
 BLOGGERFS=$HOME/workspace/bloggerfs
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
-#java -cp .:$BLOGGERFS/classes:$BLOGGERFS/fusej/lib/commons-logging-1.0.4.jar:$BLOGGERFS/fusej/dist/fuse-j.jar:$BLOGGERFS/gdata/java/lib/gdata-client-1.0.jar -Djava.library.path=$BLOGGERFS/fusej/jni -Dorg.apache.commons.logging.Log=fuse.logging.FuseLog -Dfuse.logging.level=DEBUG ca.ubc.ece.bloggerfs.BloggerFileSystem
+GOOGLE_JAR=$BLOGGERFS/lib/gdata-client-1.0.jar
+COMMONS=$BLOGGERFS/lib/commons-logging-1.0.4.jar
+FUSEJ=$BLOGGERFS/lib/fuse-j.jar
 
-java -cp .:$BLOGGERFS/classes:$BLOGGERFS/fusej/lib/commons-logging-1.0.4.jar:$BLOGGERFS/fusej/dist/fuse-j.jar:$BLOGGERFS/gdata/java/lib/gdata-client-1.0.jar -Djava.library.path=$BLOGGERFS/fusej/jni -Dorg.apache.commons.logging.Log=fuse.logging.FuseLog -Dfuse.logging.level=DEBUG -DsocksProxyHost=proxy.lsd.ufcg.edu.br -DsocksProxyPort=3128 -Dhttp.proxyHost=proxy.lsd.ufcg.edu.br -Dhttp.proxyPort=3128 -Dhttps.proxyHost=proxy.lsd.ufcg.edu.br -Dhttps.proxyPort=3128 ca.ubc.ece.bloggerfs.BloggerFileSystem
+CLASSPATH=.:$BLOGGERFS/classes:$GOOGLE_JAR:$COMMONS:$FUSEJ
+
+OPTIONS="-Djava.library.path=$BLOGGERFS/lib/jni -Dorg.apache.commons.logging.Log=fuse.logging.FuseLog -Dfuse.logging.level=DEBUG" 
+
+java -cp $CLASSPATH $OPTIONS ca.ubc.ece.netsys.bloggerfs.BloggerFileSystem $BLOGGER_USERNAME $REPLY
